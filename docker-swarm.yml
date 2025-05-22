@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql_init:/docker-entrypoint-initdb.d
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.hostname == clienteUbuntu
+
+  sephora_favoritos:
+    image: mariana12cifuentes/proyecto-favoritos:latest
+    ports:
+      - "3002:3002"
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  sephora_resenas:
+    image: mariana12cifuentes/proyecto-resenas:latest
+    ports:
+      - "3003:3003"
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  sephora_productos:
+    image: mariana12cifuentes/proyecto-productos:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  sephora_usuarios:
+    image: mariana12cifuentes/proyecto-usuarios:latest
+    ports:
+      - "3001:3001"
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  sephora_frontend:
+    image: mariana12cifuentes/sephoraapp-front:latest
+    ports:
+      - "8081:80"
+    networks:
+      - sephora_network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    environment:
+      BACKEND_USUARIOS: 'http://sephora_usuarios:3001'
+      BACKEND_PRODUCTOS: 'http://sephora_productos:3000'
+      BACKEND_RESEÑAS: 'http://sephora_resenas:3003'
+      BACKEND_FAVORITOS: 'http://sephora_favoritos:3002'
+
+volumes:
+  mysql_data:
+
+networks:
+  sephora_network:
+    driver: overlay
+
