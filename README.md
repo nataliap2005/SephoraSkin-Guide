@@ -209,3 +209,6 @@ python3 dashprueba.py
 ```
 
 Luego abre en el navegador la URL indicada (por defecto http://localhost:8050 o tu IP).
+
+
+## [Presentación del proyecto SephoraSkin-Guide en Canva](https://www.canva.com/design/DAGoM7YOgYI/0uiULM3_Au0_29CJItE5aQ/edit?utm_content=DAGoM7YOgYI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
